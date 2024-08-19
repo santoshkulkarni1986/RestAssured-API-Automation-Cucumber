@@ -8,8 +8,8 @@ WORKDIR /usr/src/app
 COPY pom.xml ./
 COPY src ./src
 
-# Download the dependencies and build the project
+# Download the dependencies, build the project, and run the tests
 RUN mvn install
 
-# Command to run the tests (you might need to adjust the command depending on how you run your tests)
-#CMD ["mvn", "test"]
+# The command to keep the container alive (optional, if needed)
+CMD ["tail", "-f", "/dev/null"]
