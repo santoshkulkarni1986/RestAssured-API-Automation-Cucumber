@@ -12,7 +12,7 @@ COPY src /app/src
 RUN apk add --no-cache maven
 
 # Resolve dependencies and build the project
-RUN mvn clean install
+RUN mvn install
 
 # Command to run the tests using Maven
 CMD ["mvn", "test"]
