@@ -3,6 +3,7 @@ package com.kushi.stepdefinitions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.InputStream;
 import java.util.Map;
 
 import org.apache.log4j.LogManager;
@@ -10,11 +11,13 @@ import org.apache.log4j.Logger;
 import org.json.JSONObject;
 //import org.jvnet.staxex.StAxSOAPBody.Payload;
 
+import com.kushi.utility.Constants;
 import com.kushi.utility.ExcelUtility;
 import com.kushi.utility.JsonUtility;
 import com.kushi.payloads.*;
 import com.kushi.utility.ResponseHandlerUtility;
 import com.kushi.utility.ResponseValidator;
+import com.kushi.utility.SchemaValidator;
 import com.kushi.utility.TestContext;
 
 import io.cucumber.datatable.DataTable;
@@ -136,7 +139,8 @@ public class CreateBookingStepdefinition {
 
     @Then("user validates the response with JSON schema {string}")
     public void userValidatesTheResponseWithJSONSchema(String schemaFileName) {
-    	context.response.then().assertThat().body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/"+schemaFileName));
+    	SchemaValidator.validateResponseWithSchema(context.response, schemaFileName);
+        LOG.info("Successfully Validated schema from " + schemaFileName);
 		LOG.info("Successfully Validated schema from "+schemaFileName);
     }
 
