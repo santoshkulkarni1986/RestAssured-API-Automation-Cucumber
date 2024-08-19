@@ -1,0 +1,46 @@
+{
+	"createBooking1": {
+		"firstname": "Sanjeev",
+		"lastname": "Hulamani",
+		"totalprice": "5000",
+		"depositpaid": "true",
+		"bookingdates": {
+		"checkin":"2024-05-15",
+		"checkout":"2024-05-20"
+		},
+		"additionalneeds":"Snacks"
+	},
+	"createBooking2": {
+		"firstname": "Manjunath",
+		"lastname": "Hulamani",
+		"totalprice": "50000",
+		"depositpaid": "false",
+		"bookingdates": {
+		"checkin":"2019-12-25",
+		"checkout":"2020-01-01"
+		},
+		"additionalneeds":"Dinner"
+	},
+	"updateBooking1": {
+		"firstname": "Rajani",
+		"lastname": "Kulkarni",
+		"totalprice": "12321",
+		"depositpaid": "true",
+		"bookingdates": {
+		"checkin":"2024-02-19",
+		"checkout":"2024-02-20"
+		},
+		"additionalneeds":"Super Tea"
+	},
+	"updateBooking2": {
+		"firstname": "Shripad",
+		"lastname": "Kulkarni",
+		"totalprice": "40000",
+		"depositpaid": "false",
+		"bookingdates": {
+		"checkin":"2017-11-10",
+		"checkout":"2017-11-21"
+		},
+		"additionalneeds":"Dinner"
+	}
+}
