@@ -2,17 +2,29 @@ pipeline {
     agent any
 
     environment {
-        // Define environment variables if needed
         DOCKER_IMAGE = 'api-automation'
         DOCKER_TAG = 'latest'
     }
 
     stages {
-        stage('Build Docker Image') {
+        stage('Build and Test Docker Image') {
             steps {
                 script {
-                    // Build the Docker image with a specific tag
+                    // Build the Docker image which runs the tests as part of the build process
                     docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                // Clean up Docker images
+                if (isUnix()) {
+                    sh 'docker image prune -af'
+                } else {
+                    bat 'docker image prune -af'
                 }
             }
         }
