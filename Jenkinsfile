@@ -17,16 +17,5 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            script {
-                // Clean up Docker images
-                if (isUnix()) {
-                    sh 'docker image prune -af'
-                } else {
-                    bat 'docker image prune -af'
-                }
-            }
-        }
-    }
+
 }
