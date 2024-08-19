@@ -1,42 +1,23 @@
 pipeline {
-    agent any
-    
-    environment {
-        // Set Docker image name and tag
-        DOCKER_IMAGE = 'kushi-santosh-api-automation'
+    agent {
+        docker {
+            image 'maven:3.8.6-openjdk-11'
+            args '-v /root/.m2:/root/.m2'
+        }
     }
-    
     stages {
-        stage('Checkout') {
+        stage('Test') {
             steps {
-                // Checkout the code from Git repository
-                checkout scm
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Build the Docker image
-                    sh "docker build -t ${DOCKER_IMAGE} ."
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                script {
-                    // Run the Docker container and execute Maven tests
-                    sh "docker run --rm ${DOCKER_IMAGE}"
-                }
+                // Run tests
+                sh 'mvn test'
             }
         }
     }
-
     post {
         always {
-            // Clean up Docker images and containers if necessary
-            sh "docker system prune -f"
+            // Archive test results and other artifacts
+            junit '**/target/surefire-reports/*.xml'
+            archiveArtifacts 'target/*.jar'
         }
     }
 }

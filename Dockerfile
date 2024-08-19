@@ -1,18 +1,15 @@
-# Use an official OpenJDK 11 image as a base
-FROM openjdk:11-jdk
+# Use an official Maven image as a parent image
+FROM maven:3.8.6-openjdk-11
 
-# Set the working directory inside the container
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
 # Copy the pom.xml and source code into the container
-COPY pom.xml /app/
-COPY src /app/src
+COPY pom.xml ./
+COPY src ./src
 
-# Install Maven
-RUN apt-get update && apt-get install -y maven
-
-# Resolve dependencies and build the project
+# Download the dependencies and build the project
 RUN mvn install
 
-# Command to run the tests using Maven
+# Command to run the tests (you might need to adjust the command depending on how you run your tests)
 CMD ["mvn", "test"]
