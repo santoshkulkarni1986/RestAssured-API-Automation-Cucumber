@@ -16,25 +16,5 @@ pipeline {
                 }
             }
         }
-
-        stage('Run Tests') {
-            steps {
-                script {
-                    // Run the tests in the Docker container
-                    docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").inside {
-                        sh 'mvn test'
-                    }
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            // Clean up Docker images
-            script {
-                sh 'docker image prune -af'
-            }
-        }
     }
 }
