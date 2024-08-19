@@ -1,23 +1,21 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.6-openjdk-11'
-            args '-v /root/.m2:/root/.m2'
-        }
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'api-automation'
+        DOCKER_TAG = 'latest'
     }
+
     stages {
-        stage('Test') {
+        stage('Build and Test Docker Image') {
             steps {
-                // Run tests
-                sh 'mvn test'
+                script {
+                    // Build the Docker image which runs the tests as part of the build process
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                }
             }
         }
     }
-    post {
-        always {
-            // Archive test results and other artifacts
-            junit '**/target/surefire-reports/*.xml'
-            archiveArtifacts 'target/*.jar'
-        }
-    }
+
+
 }
