@@ -1,11 +1,10 @@
 pipeline {
     agent any
-    
+
     environment {
-        // Set Docker image name and tag
         DOCKER_IMAGE = 'kushi-santosh-api-automation'
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -35,8 +34,15 @@ pipeline {
 
     post {
         always {
-            // Clean up Docker images and containers if necessary
-            sh "docker system prune -f"
+            script {
+                if (isUnix()) {
+                    // Clean up Docker images and containers for Unix-based agents
+                    sh "docker system prune -f"
+                } else {
+                    // Windows-specific cleanup or notification
+                    echo "Docker cleanup not supported on Windows or not configured."
+                }
+            }
         }
     }
 }
