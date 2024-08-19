@@ -8,8 +8,5 @@ WORKDIR /app
 COPY pom.xml ./
 COPY src ./src
 
-# Package the application
-RUN mvn clean package
-
 # Command to run the tests (assuming tests are in the src/test/java directory)
 CMD ["mvn", "test"]
