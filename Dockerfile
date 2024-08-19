@@ -1,5 +1,8 @@
-# Use an official Maven image as a parent image
-FROM maven:3.9.2-openjdk-17 AS build
+# Use an official OpenJDK image as a parent image
+FROM openjdk:17-jdk AS build
+
+# Install Maven
+RUN apt-get update && apt-get install -y maven
 
 # Set the working directory in the container
 WORKDIR /app
