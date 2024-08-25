@@ -1,19 +1,36 @@
 package com.kushi.stepdefinitions;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
-import io.cucumber.java.Before;
+import com.kushi.utility.ExcelReportGenerator;
+import com.kushi.utility.ExcelReportGenerator.TestData;
+import io.cucumber.java.After;
+import io.cucumber.java.AfterAll;
+import io.cucumber.java.BeforeAll;
 import io.cucumber.java.Scenario;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Hooks {
 
-	private static final Logger LOG = LogManager.getLogger(Hooks.class);
-	
-	@Before
-	public void startTheTest(Scenario scenario) {
-		LOG.info("*****************************************************************************************");
-		LOG.info("	Scenario: "+scenario.getName());
-		LOG.info("*****************************************************************************************");
-	}
+    private static List<TestData> testDataList = new ArrayList<>();
+
+    @BeforeAll
+    public static void setup() {
+        // Initialization code if needed
+    }
+
+    @After
+    public void afterScenario(Scenario scenario) {
+        // Collect data for the Excel report
+        String status = scenario.isFailed() ? "Failed" : "Passed";
+        TestData testData = new TestData(scenario.getName(), status, scenario.getId());
+        testDataList.add(testData);
+    }
+
+    @AfterAll
+    public static void teardown() {
+        // Generate Excel report
+        ExcelReportGenerator excelReportGenerator = new ExcelReportGenerator();
+        excelReportGenerator.generateReport(testDataList, "report/ExtentExcelReport.xlsx");
+    }
 }

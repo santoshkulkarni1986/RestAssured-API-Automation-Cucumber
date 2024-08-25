@@ -18,7 +18,7 @@ import com.kushi.payloads.*;
 import com.kushi.utility.ResponseHandlerUtility;
 import com.kushi.utility.ResponseValidator;
 import com.kushi.utility.SchemaValidator;
-import com.kushi.utility.TestContext;
+import com.kushi.utility.TestContextUtility;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
@@ -27,17 +27,17 @@ import io.cucumber.java.en.When;
 import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class CreateBookingStepdefinition {
-    private TestContext context;
+    private static TestContextUtility context;
     private Booking expectedBooking;
     private static final Logger LOG = LogManager.getLogger(CreateBookingStepdefinition.class);
 
-    public CreateBookingStepdefinition(TestContext context) {
+    public CreateBookingStepdefinition(TestContextUtility context) {
         this.context = context;
     }
 
     @Given("user has access to endpoint {string}")
     public void userHasAccessToEndpoint(String endpoint) {
-        context.session.put("endpoint", endpoint);
+    	context.getSession().put("endpoint", endpoint);
     }
 
     @When("user creates a booking")
@@ -55,12 +55,12 @@ public class CreateBookingStepdefinition {
 		bookingBody.put("additionalneeds", bookingData.get("additionalneeds"));
 
 		context.response = context.requestSetup().body(bookingBody.toString())
-				.when().post(context.session.get("endpoint").toString());
+				.when().post(context.getSession().get("endpoint").toString());
 
         BookingResponse bookingDTO = ResponseHandlerUtility.deserializeResponse(context.response,BookingResponse.class);
 		assertNotNull("Booking not created", bookingDTO);
 		LOG.info("Newly created booking ID: "+bookingDTO.getBookingid());
-		context.session.put("bookingID", bookingDTO.getBookingid());
+		context.getSession().put("bookingID", bookingDTO.getBookingid());
 		validateBookingData(new JSONObject(bookingData), bookingDTO);
     }
 
@@ -68,31 +68,31 @@ public class CreateBookingStepdefinition {
     public void userCreatesABookingUsingDataFromExcel(String dataKey) throws Exception {
         Map<String, String> excelDataMap = ExcelUtility.getData(dataKey);
         context.response = context.requestSetup().body(excelDataMap.get("requestBody"))
-                .when().post(context.session.get("endpoint").toString());
+                .when().post(context.getSession().get("endpoint").toString());
 
         BookingResponse bookingDTO = ResponseHandlerUtility.deserializeResponse(context.response, BookingResponse.class);
         assertNotNull("Booking not created", bookingDTO);
         LOG.info("Newly created booking ID: " + bookingDTO.getBookingid());
-        context.session.put("bookingID", bookingDTO.getBookingid());
+        context.getSession().put("bookingID", bookingDTO.getBookingid());
         validateBookingData(new JSONObject(excelDataMap.get("responseBody")), bookingDTO);
-        context.session.put("excelDataMap", excelDataMap);
+        context.getSession().put("excelDataMap", excelDataMap);
     }
 
     @Then("user validates the response with JSON schema from Excel")
     public void userValidatesTheResponseWithJSONSchemaFromExcel() {
-    	context.response.then().assertThat().body(JsonSchemaValidator.matchesJsonSchema(((Map<String,String>) context.session.get("excelDataMap")).get("responseSchema")));
+    	context.response.then().assertThat().body(JsonSchemaValidator.matchesJsonSchema(((Map<String,String>) context.getSession().get("excelDataMap")).get("responseSchema")));
 		LOG.info("Successfully Validated schema from Excel");
     }
 
     @When("user creates a booking using data {string} from JSON file {string}")
     public void userCreatesABookingUsingDataFromJSONFile(String dataKey, String JSONFile) {
         context.response = context.requestSetup().body(JsonUtility.getRequestBody(JSONFile, dataKey))
-                .when().post(context.session.get("endpoint").toString());
+                .when().post(context.getSession().get("endpoint").toString());
 
         BookingResponse bookingDetails = ResponseHandlerUtility.deserializeResponse(context.response, BookingResponse.class);
         assertNotNull("Booking not created", bookingDetails);
         LOG.info("Newly created booking ID: " + bookingDetails.getBookingid());
-        context.session.put("bookingID", bookingDetails.getBookingid());
+        context.getSession().put("bookingID", bookingDetails.getBookingid());
     }
 
     @When("user creates a booking with the following details")
@@ -115,12 +115,12 @@ public class CreateBookingStepdefinition {
 
          // Send the request
          context.response = context.requestSetup().body(bookingDetails)
-                 .when().post(context.session.get("endpoint").toString());
+                 .when().post(context.getSession().get("endpoint").toString());
 
          BookingResponse responseBookingDetails = ResponseHandlerUtility.deserializeResponse(context.response, BookingResponse.class);
          assertNotNull("Booking not created", responseBookingDetails);
          LOG.info("Newly created booking ID: " + responseBookingDetails.getBookingid());
-         context.session.put("bookingID", responseBookingDetails.getBookingid());
+         context.getSession().put("bookingID", responseBookingDetails.getBookingid());
     }
 
     @Then("user validates the response with POJO classes")

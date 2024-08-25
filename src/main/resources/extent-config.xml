@@ -3,17 +3,20 @@
 	<configuration>
 		<!-- report theme -->
 		<!-- standard, dark -->
-		<theme>dark</theme>
+		<theme>standard</theme>
 		<!-- document encoding -->
 		<!-- defaults to UTF-8 -->
 		<encoding>UTF-8</encoding>
 		<!-- protocol for script and stylesheets -->
 		<!-- defaults to https -->
-		<protocol>http</protocol>
+		<protocol>HTTPS</protocol>
 		<!-- title of the document -->
-		<documentTitle>Booker API Report</documentTitle>
+		<documentTitle>Extent Report - API Automation</documentTitle>
 		<!-- report name - displayed at top-nav -->
-		<reportName>Execution Report</reportName>
+		<reportName>API Automation Report</reportName>
+		
+		 <timeStampFormat>MMM dd, yyyy HH:mm:ss</timeStampFormat>
+
 		<!-- location of charts in the test view -->
 		<!-- top, bottom -->
 		<testViewChartLocation>top</testViewChartLocation>

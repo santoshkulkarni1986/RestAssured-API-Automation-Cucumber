@@ -1,13 +1,13 @@
 package com.kushi.stepdefinitions;
 
-import com.kushi.utility.TestContext;
+import com.kushi.utility.TestContextUtility;
 
 import io.cucumber.java.en.When;
 
 public class DeleteBookingStepdefinition {
-	private TestContext context;
+	private TestContextUtility context;
 
-	public DeleteBookingStepdefinition(TestContext context) {
+	public DeleteBookingStepdefinition(TestContextUtility context) {
 		this.context = context;
 	}
 
@@ -15,7 +15,7 @@ public class DeleteBookingStepdefinition {
 	public void userMakesARequestToDeleteBookingWithBasicAuth(String username, String password) {
 		context.response = context.requestSetup()
 				.auth().preemptive().basic(username, password)
-				.pathParam("bookingID", context.session.get("bookingID"))
-				.when().delete(context.session.get("endpoint")+"/{bookingID}");
+				.pathParam("bookingID", context.getSession().get("bookingID"))
+				.when().delete(context.getSession().get("endpoint")+"/{bookingID}");
 	}
 }

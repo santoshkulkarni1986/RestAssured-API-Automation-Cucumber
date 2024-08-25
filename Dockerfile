@@ -8,6 +8,11 @@ WORKDIR /usr/src/app
 COPY pom.xml ./
 COPY src ./src
 
-# Download the dependencies and build the project
+# Download the dependencies
+RUN mvn dependency:resolve
+
+# Run the tests and generate the reports
 RUN mvn install
 
+# Keep the container running (optional for debugging)
+CMD ["tail", "-f", "/dev/null"]

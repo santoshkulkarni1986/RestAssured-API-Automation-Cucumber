@@ -45,14 +45,20 @@ public class JsonUtility {
         final String filepath = baseProjectPath.concat(Constants.TEST_JSON_FILE_PATH);
 
         try (FileReader reader = new FileReader(filepath + jsonFileName)) {
-            Object body = ((JSONObject) parser.parse(reader)).get(jsonKey);
-            if (body == null) {
+        	 // Parse the JSON file
+            JSONObject jsonObject = (JSONObject) parser.parse(reader);
+            
+            // Retrieve the JSON object for the specified key
+            JSONObject body = (JSONObject) jsonObject.get(jsonKey);            if (body == null) {
                 throw new RuntimeException("NO DATA FOUND in JSON file '" + jsonFileName + "' for key '" + jsonKey + "'");
             }
             return body.toString();
-        } catch (IOException | ParseException e) {
-            LOG.error("Error while reading or parsing the file: " + jsonFileName, e);
-            throw new RuntimeException("Error processing JSON file: " + jsonFileName, e);
+        } catch (IOException e) {
+            LOG.error("Error while reading the file: " + jsonFileName, e);
+            throw new RuntimeException("Error reading JSON file: " + jsonFileName, e);
+        } catch (ParseException e) {
+            LOG.error("Error while parsing the JSON file: " + jsonFileName, e);
+            throw new RuntimeException("Error parsing JSON file: " + jsonFileName, e);
         }
     }
 
