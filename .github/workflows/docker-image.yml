@@ -38,7 +38,7 @@ jobs:
 
     # 5️⃣ Upload ExtentReports and CustomListener outputs as artifacts
     - name: Upload test reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: TestReports
         path: target/   # Ensure your reports are generated under target/
