@@ -1,18 +1,59 @@
-# Use an official Maven image as a parent image
-FROM maven:3.8.6-openjdk-11
+name: Maven Docker CI
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
-# Copy the pom.xml and source code into the container
-COPY pom.xml ./
-COPY src ./src
+jobs:
+  build:
 
-# Download the dependencies
-RUN mvn dependency:resolve
+    runs-on: ubuntu-latest
 
-# Run the tests and generate the reports
-RUN mvn install
+    steps:
+    # 1️⃣ Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-# Keep the container running (optional for debugging)
-CMD ["tail", "-f", "/dev/null"]
+    # 2️⃣ Set up JDK (Maven needs Java)
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
+    # 3️⃣ Cache Maven dependencies (optional for speed)
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    # 4️⃣ Build and test the Maven project
+    - name: Build and test with Maven
+      run: mvn install
+
+    # 5️⃣ Set up Docker Buildx (optional, recommended)
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    # 6️⃣ Build Docker image (only if Maven tests pass)
+    - name: Build Docker image
+      run: |
+        IMAGE_NAME=my-maven-app
+        TAG=${{ github.sha }}
+        docker build . -f Dockerfile -t $IMAGE_NAME:$TAG
+        echo "Docker image $IMAGE_NAME:$TAG built successfully"
+
+    # 7️⃣ Optional: Push Docker image to Docker Hub
+    # - name: Log in to Docker Hub
+    #   uses: docker/login-action@v2
+    #   with:
+    #     username: ${{ secrets.DOCKER_USERNAME }}
+    #     password: ${{ secrets.DOCKER_PASSWORD }}
+    #
+    # - name: Push Docker image
+    #   run: docker push $IMAGE_NAME:$TAG
