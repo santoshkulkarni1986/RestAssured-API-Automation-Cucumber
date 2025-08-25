@@ -8,40 +8,43 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Checkout code
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      # 1️⃣ Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    # 2️⃣ Set up JDK 11
-    - name: Set up Java
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
+      # 2️⃣ Set up JDK 11
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
 
-    # 3️⃣ Cache Maven dependencies
-    - name: Cache Maven packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
+      # 3️⃣ Cache Maven dependencies
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-    # 4️⃣ Build and test Maven project
-    - name: Build and test with Maven
-      run: mvn clean install
+      # 4️⃣ Build and test Maven project
+      - name: Build and test with Maven
+        run: mvn clean install
 
-    # 5️⃣ Upload ExtentReports and CustomListener outputs as artifacts
-    - name: Upload test reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: TestReports
-        path: report/   # Ensure your reports are generated under target/
+      # 5️⃣ Upload ExtentReports and CustomListener outputs as artifacts
+      - name: Upload all test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestReports
+          path: report/   # Ensure your reports are generated under report/
 
-
-   
+      # 6️⃣ Optional: Upload ExtentReports HTML specifically
+      - name: Upload ExtentReports HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: ExtentReports
+          path: report/ExtentSparkReportAPIAutomation.html
